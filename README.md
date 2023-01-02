@@ -1,1 +1,0 @@
-# rn-new-year-card

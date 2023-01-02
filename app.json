@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "525a6026-d9ed-401d-acfa-744f0bb915ab"
+      }
+    },
+    "owner": "kimseonhyeong"
   }
 }

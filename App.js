@@ -1,20 +1,65 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from "react-native";
+// import uuid from "react-native-uuid";
 
 export default function App() {
+  const [content, setContent] = useState("");
+  const [writer, setWriter] = useState("");
+  const [cards, setCards] = useState([]);
+  console.log(content);
+  console.log(cards);
+
+  const handleOnPressAddCard = () => {
+    const newCard = {
+      // id: uuid.v4(),
+      content,
+      writer,
+      time: new Date().toLocaleString(),
+    };
+    setCards(...cards, newCard);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={styles.background}>
+      <Text>{content}</Text>
+
+      <TextInput
+        style={styles.cardWriterInput}
+        onChangeText={setWriter}
+        value={writer}
+      />
+      <TextInput
+        style={styles.cardContentInput}
+        multiline={true}
+        numberOfLines={1}
+        onChangeText={setContent}
+        value={content}
+      />
+      <TouchableOpacity onPress={handleOnPressAddCard}>
+        <Text>제출</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  cardContentInput: {
+    flex: 0.5,
+    backgroundColor: "pink",
+  },
+  cardWriterInput: {
+    flex: 0.1,
+    backgroundColor: "green",
   },
 });

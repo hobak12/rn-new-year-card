@@ -8,7 +8,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-// import uuid from "react-native-uuid";
+import uuid from "react-native-uuid";
 
 export default function App() {
   const [content, setContent] = useState("");
@@ -19,18 +19,17 @@ export default function App() {
 
   const handleOnPressAddCard = () => {
     const newCard = {
-      // id: uuid.v4(),
+      id: uuid.v4(),
       content,
       writer,
       time: new Date().toLocaleString(),
     };
-    setCards(...cards, newCard);
+    setCards([...cards, newCard]);
   };
 
   return (
     <View style={styles.background}>
       <Text>{content}</Text>
-
       <TextInput
         style={styles.cardWriterInput}
         onChangeText={setWriter}
@@ -46,6 +45,14 @@ export default function App() {
       <TouchableOpacity onPress={handleOnPressAddCard}>
         <Text>제출</Text>
       </TouchableOpacity>
+      <View style={styles.cardContainer}>
+        {cards.map((card) => (
+          <View key={card.id} style={styles.cardItem}>
+            <Text>작성자: {card.writer}</Text>
+            <Text>내용: {card.content}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
@@ -61,5 +68,14 @@ const styles = StyleSheet.create({
   cardWriterInput: {
     flex: 0.1,
     backgroundColor: "green",
+  },
+  cardContainer: {
+    alignItems: "center",
+    backgroundColor: "aqua",
+  },
+  cardItem: {
+    marginBottom: 10,
+    backgroundColor: "whitesmoke",
+    width: "90%",
   },
 });

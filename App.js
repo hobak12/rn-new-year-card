@@ -8,14 +8,14 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
 import uuid from "react-native-uuid";
 
-export default function App() {
+const Home = ({ navigation: { navigate } }) => {
   const [content, setContent] = useState("");
   const [writer, setWriter] = useState("");
   const [cards, setCards] = useState([]);
-  console.log(content);
-  console.log(cards);
 
   const handleOnPressAddCard = () => {
     const newCard = {
@@ -25,11 +25,11 @@ export default function App() {
       time: new Date().toLocaleString(),
     };
     setCards([...cards, newCard]);
+    navigate("CardDetails", { cards: cards });
   };
 
   return (
     <View style={styles.background}>
-      <Text>{content}</Text>
       <TextInput
         style={styles.cardWriterInput}
         onChangeText={setWriter}
@@ -45,15 +45,33 @@ export default function App() {
       <TouchableOpacity onPress={handleOnPressAddCard}>
         <Text>제출</Text>
       </TouchableOpacity>
-      <View style={styles.cardContainer}>
-        {cards.map((card) => (
-          <View key={card.id} style={styles.cardItem}>
-            <Text>작성자: {card.writer}</Text>
-            <Text>내용: {card.content}</Text>
-          </View>
-        ))}
-      </View>
     </View>
+  );
+};
+
+const CardDetails = ({ route }) => {
+  return (
+    <View style={styles.cardContainer}>
+      {route.params.cards.map((card) => (
+        <View key={card.id} style={styles.cardItem}>
+          <Text>작성자: {card.writer}</Text>
+          <Text>내용: {card.content}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+export default function App() {
+  const Stack = createNativeStackNavigator();
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="home" component={Home} />
+        <Stack.Screen name="CardDetails" component={CardDetails} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

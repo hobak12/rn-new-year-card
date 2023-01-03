@@ -8,29 +8,28 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-// import uuid from "react-native-uuid";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import uuid from "react-native-uuid";
 
-export default function App() {
+const Home = ({ navigation: { navigate } }) => {
   const [content, setContent] = useState("");
   const [writer, setWriter] = useState("");
   const [cards, setCards] = useState([]);
-  console.log(content);
-  console.log(cards);
 
   const handleOnPressAddCard = () => {
     const newCard = {
-      // id: uuid.v4(),
+      id: uuid.v4(),
       content,
       writer,
       time: new Date().toLocaleString(),
     };
-    setCards(...cards, newCard);
+    setCards([...cards, newCard]);
+    navigate("CardDetails", { cards: cards });
   };
 
   return (
     <View style={styles.background}>
-      <Text>{content}</Text>
-
       <TextInput
         style={styles.cardWriterInput}
         onChangeText={setWriter}
@@ -48,6 +47,32 @@ export default function App() {
       </TouchableOpacity>
     </View>
   );
+};
+
+const CardDetails = ({ route }) => {
+  return (
+    <View style={styles.cardContainer}>
+      {route.params.cards.map((card) => (
+        <View key={card.id} style={styles.cardItem}>
+          <Text>작성자: {card.writer}</Text>
+          <Text>내용: {card.content}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+export default function App() {
+  const Stack = createNativeStackNavigator();
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="home" component={Home} />
+        <Stack.Screen name="CardDetails" component={CardDetails} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -61,5 +86,14 @@ const styles = StyleSheet.create({
   cardWriterInput: {
     flex: 0.1,
     backgroundColor: "green",
+  },
+  cardContainer: {
+    alignItems: "center",
+    backgroundColor: "aqua",
+  },
+  cardItem: {
+    marginBottom: 10,
+    backgroundColor: "whitesmoke",
+    width: "90%",
   },
 });

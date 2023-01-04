@@ -17,7 +17,7 @@ const Home = ({ navigation: { navigate } }) => {
   const [writer, setWriter] = useState("");
   const [cards, setCards] = useState([]);
 
-  const handleOnPressAddCard = () => {
+  const addCard = () => {
     const newCard = {
       id: uuid.v4(),
       content,
@@ -25,7 +25,13 @@ const Home = ({ navigation: { navigate } }) => {
       time: new Date().toLocaleString(),
     };
     setCards([...cards, newCard]);
-    navigate("CardDetails", { cards: cards });
+    navigate("CardDetails", { cards: cards, deleteCard: deleteCard });
+  };
+
+  const deleteCard = (id) => {
+    //const newCardList = cards.filter((card)=> card.id !== id)
+    setCards((prev) => [...prev].filter((card) => card.id !== id));
+    //setCards(newCardList)
   };
 
   return (
@@ -42,7 +48,7 @@ const Home = ({ navigation: { navigate } }) => {
         onChangeText={setContent}
         value={content}
       />
-      <TouchableOpacity onPress={handleOnPressAddCard}>
+      <TouchableOpacity onPress={addCard}>
         <Text>제출</Text>
       </TouchableOpacity>
     </View>
@@ -50,12 +56,21 @@ const Home = ({ navigation: { navigate } }) => {
 };
 
 const CardDetails = ({ route }) => {
+  const deleteCard = route.params.deleteCard;
   return (
     <View style={styles.cardContainer}>
       {route.params.cards.map((card) => (
         <View key={card.id} style={styles.cardItem}>
           <Text>작성자: {card.writer}</Text>
           <Text>내용: {card.content}</Text>
+          <View>
+            <TouchableOpacity>
+              <Text>수정</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => deleteCard(card.id)}>
+              <Text>삭제</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       ))}
     </View>
